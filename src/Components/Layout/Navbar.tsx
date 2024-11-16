@@ -1,5 +1,12 @@
 import App from "@/pages/_app";
-import { AppBar, Box, Container, IconButton, Toolbar } from "@mui/material";
+import {
+  AppBar,
+  Avatar,
+  Box,
+  Container,
+  IconButton,
+  Toolbar,
+} from "@mui/material";
 import React from "react";
 import { ConnectWallet } from "@thirdweb-dev/react";
 import Image from "next/image";
@@ -42,13 +49,7 @@ const Navbar: React.FC<NavbarProps> = ({ open, setOpen }) => {
                     onClick={handleDrawerToggle}
                   />
                 </IconButton>
-                <Image
-                  src="/noma.jpeg"
-                  alt="logo"
-                  width={50}
-                  height={50}
-                  style={{ borderRadius: "50%" }}
-                />
+                <Avatar />
                 <CustomTypography
                   sx={{ color: "#fff", fontSize: { xs: "12px" } }}
                 >

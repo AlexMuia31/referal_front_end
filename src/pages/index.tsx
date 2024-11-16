@@ -99,7 +99,7 @@ export default function Home() {
       setOpenSnackbar(true);
       console.log("contract call success", data);
     } catch (e) {
-      setSnackbarMessage("Failed to register wallet address.");
+      setSnackbarMessage("Failed! register wallet address first.");
       setSnackbarSeverity("error");
       setOpenSnackbar(true);
       console.log("contract call failure", e);
@@ -314,6 +314,15 @@ export default function Home() {
           </Grid>
           {/* Snackbar */}
           <Snackbar
+            sx={{
+              position: "fixed",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              "& .MuiSnackbarContent-root": {
+                justifyContent: "center",
+              },
+            }}
             open={openSnackbar}
             autoHideDuration={6000}
             onClose={handleCloseSnackbar}

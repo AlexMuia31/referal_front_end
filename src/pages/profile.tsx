@@ -6,6 +6,7 @@ import {
   Grid,
   TextField,
   Toolbar,
+  Alert,
 } from "@mui/material";
 import { useAddress } from "@thirdweb-dev/react";
 import React, { useEffect, useState } from "react";
@@ -14,7 +15,6 @@ import {
   useGetUsersQuery,
 } from "../Components/APICalls/services";
 import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
 
 type User = {
   id: number;
@@ -42,8 +42,13 @@ const Profile = () => {
     wallet: address,
   });
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<
+    "success" | "error" | "info" | "warning"
+  >("info");
 
   console.log("user is...", user);
+
   const handleCreateUser = async (event: any) => {
     event.preventDefault();
 
@@ -56,9 +61,13 @@ const Profile = () => {
         wallet: address,
       });
 
-      console.log("Data has been sent successfully!");
+      setSnackbarMessage("Profile updated successfully!");
+      setSnackbarSeverity("success");
+      setOpenSnackbar(true);
     } catch (error) {
-      // Handle error
+      setSnackbarMessage("Error while updating profile.");
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
       console.error("Error while sending data:", error);
     }
   };
@@ -71,7 +80,11 @@ const Profile = () => {
     }));
   };
 
-  const handleSnackbarClose = () => {
+  const handleSnackbarClose = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") return;
     setOpenSnackbar(false);
   };
 
@@ -92,9 +105,9 @@ const Profile = () => {
       <Box>
         <Container maxWidth="xl">
           <Grid container spacing={3}>
+            {/* Profile Info */}
             <Grid item xs={12} md={4}>
               <Box sx={{ background: "#fff", p: "4%", borderRadius: "10px" }}>
-                {" "}
                 <CustomTypography sx={{ textAlign: "left" }}>
                   My profile
                 </CustomTypography>
@@ -146,6 +159,8 @@ const Profile = () => {
                 </Box>
               </Box>
             </Grid>
+
+            {/* Profile Update Form */}
             <Grid item xs={12} md={8}>
               <form onSubmit={handleCreateUser}>
                 <Box sx={{ background: "#fff", p: "4%", borderRadius: "10px" }}>
@@ -233,6 +248,7 @@ const Profile = () => {
                   </Box>
                   <Button
                     type="submit"
+                    disabled={isLoading}
                     sx={{
                       color: "#fff",
                       background: "#000",
@@ -244,7 +260,7 @@ const Profile = () => {
                     }}
                     fullWidth
                   >
-                    Update
+                    {isLoading ? "Updating..." : "Update"}
                   </Button>
                 </Box>
               </form>
@@ -252,13 +268,22 @@ const Profile = () => {
           </Grid>
         </Container>
       </Box>
-      {/* Snackbar for update message */}
+
+      {/* Snackbar */}
       <Snackbar
         open={openSnackbar}
-        autoHideDuration={6000} // Adjust as needed
+        autoHideDuration={6000}
         onClose={handleSnackbarClose}
-        message="Profile updated successfully"
-      />
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={handleSnackbarClose}
+          severity={snackbarSeverity}
+          sx={{ width: "100%" }}
+        >
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

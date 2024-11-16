@@ -8,6 +8,8 @@ import {
   Grid,
   TextField,
   Toolbar,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { CustomTypography } from "@/Components/Typographies";
 import React, { useEffect, useState } from "react";
@@ -42,6 +44,11 @@ export default function Home() {
     [address]
   );
   const [referrer, setReferrer] = useState("");
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<
+    "success" | "error" | "info" | "warning"
+  >("info");
 
   const [mergedData, setMergedData] = useState<User[]>([]);
 
@@ -62,16 +69,39 @@ export default function Home() {
     [address]
   );
 
+  const handleCloseSnackbar = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setOpenSnackbar(false);
+  };
+
   //handle referrer change
-  const handleReferrerChange = (event: any) => {
+  const handleReferrerChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setReferrer(event.target.value);
   };
   //handle register
+  // Handle register
   const Register = async () => {
     try {
+      if (!referrer) {
+        setSnackbarMessage("Please enter a wallet address.");
+        setSnackbarSeverity("warning");
+        setOpenSnackbar(true);
+        return;
+      }
       const data = await register({ args: [referrer] });
+      setSnackbarMessage("Wallet address registered successfully!");
+      setSnackbarSeverity("success");
+      setOpenSnackbar(true);
       console.log("contract call success", data);
     } catch (e) {
+      setSnackbarMessage("Failed to register wallet address.");
+      setSnackbarSeverity("error");
+      setOpenSnackbar(true);
       console.log("contract call failure", e);
     }
   };
@@ -282,6 +312,21 @@ export default function Home() {
               </Box>
             </Grid>
           </Grid>
+          {/* Snackbar */}
+          <Snackbar
+            open={openSnackbar}
+            autoHideDuration={6000}
+            onClose={handleCloseSnackbar}
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          >
+            <Alert
+              onClose={handleCloseSnackbar}
+              severity={snackbarSeverity}
+              sx={{ width: "100%" }}
+            >
+              {snackbarMessage}
+            </Alert>
+          </Snackbar>
         </Container>
       </Box>
     </>

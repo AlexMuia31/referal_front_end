@@ -142,7 +142,7 @@ export default function Home() {
                 <CustomTypography
                   sx={{ textAlign: "left", fontSize: "14px", fontWeight: 300 }}
                 >
-                  Total Noma Tokens Accrued
+                  Total Tokens Accrued
                 </CustomTypography>
                 <CustomTypography
                   sx={{

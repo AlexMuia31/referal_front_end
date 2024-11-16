@@ -255,7 +255,7 @@ export default function Home() {
                     "&:hover": { backgroundColor: "#1A76D2" },
                   }}
                 >
-                  Buy Noma Tokens on Uniswap
+                  Buy Eth on Uniswap
                 </Button>
               </Box>
             </Grid>
